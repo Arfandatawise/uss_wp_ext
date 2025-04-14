@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "USS winning portal auction",
+  "description": "This extension is developed to facilitate image uploads in our invoice system for users.",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "webRequest",
+    "storage",
+    "cookies"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.uss-engine.com/*"],
+      "js": ["jquery.js", "jquery_ui.js","content.js"],
+      "css" : [
+        "design.css"
+    ]
+    }
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "web_accessible_resources": [
+    {
+       "resources": [
+          
+          "sprites.png"
+         
+       ],
+       "matches": ["<all_urls>"]
+    }
+ ]
+}
