@@ -13,16 +13,35 @@ function toHalfWidth(str) {
   });
 }
 
+
+
+
     let currentUrl = window.location.href;
    
     var table =
-      `<div style="right:15px;top:10px; width:130px;position:fixed;font-family: Gotham, Helvetica Neue, Helvetica, Arial, sans-serif !important;border-radius: 10px;padding:15px;background-color:#FCBF01;z-index:10000" id="modal_selection_div_id">
+      `<div style="right:15px;top:10px; width:130px;position:fixed;font-family: Gotham, Helvetica Neue, Helvetica, Arial, sans-serif !important;border-radius: 10px;padding:15px;background-color:#ffc107;z-index:10000" id="modal_selection_div_id">
       <button id="load_bid_uss" style="padding:3px 12px;width:100%">Show Bid</button>
-      </div>`;
+      <label style=" font-size: 14px;color:black;font-weight:600">
+      No Bid
+      <div id="toggleNotBids" style="position: relative; width: 40px; height: 20px; background: black; border-radius: 20px; margin-top: 4px; cursor: pointer;">
+        <input type="checkbox" style="opacity: 0; width: 40px; height: 20px; position: absolute; top: 0; left: 0; margin: 0; cursor: pointer;">
+        <div class="thumb" style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s;"></div>
+      </div>
+    </label>
 
-      let users_bid_div = "<div class='append_bids bid-header' style=' width: 205px;margin: 0 auto;float: inline-start;'></div>" 
+     <label style=" font-size: 14px;color:black;font-weight:600">
+      Unmatched Bid
+      <div id="toggleNotEqual" style="position: relative; width: 40px; height: 20px; background: black; border-radius: 20px; margin-top: 4px; cursor: pointer;">
+        <input type="checkbox" style="opacity: 0; width: 40px; height: 20px; position: absolute; top: 0; left: 0; margin: 0; cursor: pointer;">
+        <div class="thumb" style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s;"></div>
+      </div>
+    </label>
+      </div>
+      `;
+
+      let users_bid_div = "<div class='append_bids bid-header' style=' width: 166px;margin: 0 auto;float: inline-start;margin-left:-6px'></div>" 
    
-      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style=' width: 205px;margin-top:5px;'></div>";
+      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style=' width: 166px;margin-top:5px;margin-left:-6px'></div>";
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecarlistraku.action')  || currentUrl.startsWith('https://www.uss-engine.com/tradecarlistspn.action')) {
       
         $(table).insertBefore('#container');
@@ -139,7 +158,7 @@ function toHalfWidth(str) {
               if ($(this).attr('id')) {
                 let id =  $(this).attr('id'); 
                 let number = id.replace(/\D/g, '');
-                $('#tbody'+number).css('background-color','rgb(223 220 208)');
+                $('#tbody'+number).css('background-color','red');
               }
            });
           alert('No record found!')
@@ -184,7 +203,8 @@ function toHalfWidth(str) {
               // Convert to integer if it has no decimals, otherwise keep it as float
               // bidValue = (bidValue % 1 === 0) ? parseInt(bidValue, 10) : bidValue;
               if(matchedItems.length == 0  ){
-                $('#tbody'+number).css('background-color','rgb(223 220 208)');
+                $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                $('#tbody'+number).addClass('unbidded');
               }
               matchedItems.map(function(record){
                 let max_rate = typeof record.rate === "string" ? 0 :record.rate;
@@ -207,21 +227,25 @@ function toHalfWidth(str) {
                   if($('#max_rate'+number).length > 0){
                     let get_max_val = $('#max_rate'+number).val();
                     if(max_rate > get_max_val){
-                      let user_bid = getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate,number)
+                      let user_bid = getUserData(record.wholeBid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate,number)
                       $('#tbody'+number).find('.append_bids').append(user_bid)
                      
                     }
                    }else{
-                    let user_bid = getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate,number)
+                    let user_bid = getUserData(record.wholeBid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate,number)
                     $('#tbody'+number).find('.append_bids').append(user_bid)
                     
                    }
-                  // let user_bid = getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,rate_color,max_rate,number)
-                  // $('#tbody'+number).find('.append_bids').append(user_bid)
+                   if(rate_color == 'red'){
+                      $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                      $('#tbody'+number).addClass('unequal');
+                    }else{
+                     $('#tbody'+number).addClass('equal');
+                   }
+                
                 }
 
-                // let user_bid = getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,rate_color,max_rate,number)
-                //   $('#tbody'+number).find('.append_bids').append(user_bid)
+              
               
               });
              
@@ -248,11 +272,18 @@ function toHalfWidth(str) {
                 let sh_cntry = record.country.hr_name;
                 let rate_color  =   (typeof record.rate === "number") ? getBidColor(bidValue,record.rate) : 'black';
                 if( typeof record.rate != "string"){
-                  user_bid += getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate)
+                  user_bid += getUserData(record.wholeBid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate)
                 }
               });
               $('#append_bids').html(user_bid)
-              showHighestBid()
+
+               if(rate_color == 'red'){
+                      // $('#tbody'+number).find('.append_bids').append(user_bid)
+                      $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                      $('#tbody'+number).addClass('unequal');
+                    }else{
+                     $('#tbody'+number).addClass('equal');
+                   }
           }
         },
         error: function(xhr, status, error) {
@@ -265,36 +296,39 @@ function toHalfWidth(str) {
   });
 
 
-  function getUserData(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,expense,remark,rate_color = 'black',max_rate=0,number=0){
-    return getUserdataLikeIuacExt(show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,expense,remark,rate_color ,max_rate,number);
+  function getUserData(whole_bid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,expense,remark,rate_color = 'black',max_rate=0,number=0){
+    return getUserdataLikeIuacExt(whole_bid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,expense,remark,rate_color ,max_rate,number);
   }
 
-function getUserdataLikeIuacExt(show_bid_name, hr_name, f_bid_price, user_id, sh_cntry, expense, remark, rate_color = 'black', max_rate = 0, number = 0) {
+function getUserdataLikeIuacExt(whole_bid,show_bid_name, hr_name, f_bid_price, user_id, sh_cntry, expense, remark, rate_color = 'black', max_rate = 0, number = 0) {
 
   let user_name = getFirstName(user_id);
-  let expense_deducted = `<span style="color: black; font-size: 14px; margin: 0 2px;color:black;font-size: 12px">Trp: ${expense}</span>`;
+  // let expense_deducted = `<span style="color: black; font-size: 14px; margin: 0 2px;color:black;font-size: 12px">Trp: ${expense}</span>`;
+  let total_bid = `<span style=" margin: 0 2px;color:black;font-size: 12px;font-weight:bold;width:25%;display:inline-block;text-align:center">(${whole_bid})</span>`;
 
   let add_bid =
-      `<div style="background-color: #FCBF01; padding: 3px; font-family: Arial; width: 100%; box-sizing: border-box;">
+      `<div style="background-color: #ffc107; padding: 3px; font-family: Arial; width: 100%; box-sizing: border-box;">
           <!-- First Row -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-              <span style="display: flex; align-items: center;">
+              <span style="display: flex; align-items: center;width:40%">
                   <span title="${show_bid_name}" class="flag ${hr_name}" style="margin-right: 2px;"></span>
                   <div title="${sh_cntry}" style="white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; font-size: 12px;color:black">${sh_cntry}</div>
-              </span>
-              ${expense_deducted}
-              <span style="font-size: 13px; margin: 0 2px;color:black" title="${user_id}">👤 ${user_name}</span>
+                  </span>
+                  ${total_bid}
+                  <span style="font-size: 13px; margin: 0 2px;color:black;width:35%" title="${user_id}">${user_name}</span>
           </div>
           
           <!-- Second Row -->
           <div style="display: flex; gap: 3px; justify-content: center;">
-              <input title="${show_bid_name}" 
-                  style="width: 98px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; color: ${rate_color}; box-sizing: border-box;"
-                  class="already_bid_value njm_pre_price show_space_tb" disabled type="text" value="${f_bid_price}" placeholder="Bid...." />
+           <input title="${show_bid_name}" 
+                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; box-sizing: border-box;"
+                  class="already_bid_value njm_pre_ramarks" type="text" disabled value="${remark}" placeholder="Remarks...." />
 
               <input title="${show_bid_name}" 
-                  style="width: 98px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; box-sizing: border-box;"
-                  class="already_bid_value njm_pre_ramarks" type="text" disabled value="${remark}" placeholder="Remarks...." />
+                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; color: ${rate_color}; box-sizing: border-box;"
+                  class="already_bid_value njm_pre_price show_space_tb" disabled type="text" value="${f_bid_price}" placeholder="Bid...." />
+
+             
           </div>
 
           <input id="max_rate${number}" class="max_rate_detail" type="hidden" value="${max_rate}">
@@ -304,37 +338,107 @@ function getUserdataLikeIuacExt(show_bid_name, hr_name, f_bid_price, user_id, sh
 }
 
 
-  function showHighestBid() {
-    console.log('yes')
-    let highestBidCard = null;
-    let highestRate = -Infinity;
 
-    $(".user_bid_shw_data").each(function () {
-        let maxRate = parseFloat($(this).find(".max_rate_detail").val());
-
-        if (maxRate > highestRate) {
-            highestRate = maxRate;
-            highestBidCard = $(this);
-        }
-    });
-
-    // Hide all bid-cards except the highest one
-    $(".user_bid_shw_data").hide();
-    if (highestBidCard) {
-        highestBidCard.show();
-    }
-}
 
 
 
 function getBidColor(successfulBid, bidPrice) {
   let success_bid = successfulBid / 10;
-  let threshold = bidPrice + (bidPrice * 0.10); // Add 10% of bid_Price
-  return threshold < success_bid ? "red" : "black"; // Check condition
+  let market_20 = bidPrice + (bidPrice * 0.20); // Add 10% of bid_Price
+  return market_20 < success_bid ? "red" : "black"; // Check condition
 }
 
 function getFirstName(name) {
   return name.split("_")[0]; // Split by '_' and return the first element
 }
+
+
+
+
+
+  $(document).on('change', '#toggleNotBids input[type="checkbox"]', function () {
+    const $toggle = $('#toggleNotBids');
+    const $thumb = $toggle.find('.thumb');
+    
+
+     /////////////////////
+    const $otherToggle = $('#toggleNotEqual');
+    const $otherThumb = $otherToggle.find('.thumb');
+    const $otherCheckbox = $otherToggle.find('input[type="checkbox"]');
+    if ($otherCheckbox.prop('checked')) {
+      $otherCheckbox.prop('checked', false);
+      $otherToggle.css('background', 'black');
+      $otherThumb.css('transform', 'translateX(0)');
+    }
+     /////////////////////
+
+    if (this.checked) {
+      $('.custom-scroll').scrollTop(0);
+      $toggle.css('background', '#66b666');
+      $thumb.css('transform', 'translateX(20px)');
+       $('.unequal').hide();
+       $('.equal').hide();
+       $('.unbidded').show();
+
+     
+    } else {
+      $toggle.css('background', 'black');
+      $thumb.css('transform', 'translateX(0)');
+       $('.unequal').show();
+       $('.equal').show();
+       $('.unbidded').show();
+
+     
+    }
+  });
+
+
+  
+  // Event for #toggleNotEqual
+  
+  $(document).on('change', '#toggleNotEqual input[type="checkbox"]', function () {
+    const $toggle = $('#toggleNotEqual');
+    const $thumb = $toggle.find('.thumb');
+
+    /////////////////////
+    const $otherToggle = $('#toggleNotBids');
+    const $otherThumb = $otherToggle.find('.thumb');
+    const $otherCheckbox = $otherToggle.find('input[type="checkbox"]');
+    if ($otherCheckbox.prop('checked')) {
+      $otherCheckbox.prop('checked', false);
+      $otherToggle.css('background', 'black');
+      $otherThumb.css('transform', 'translateX(0)');
+    }
+    /////////////////////
+    
+    if (this.checked) {
+      $('.custom-scroll').scrollTop(0);
+      $toggle.css('background', '#66b666');
+      $thumb.css('transform', 'translateX(20px)');
+       $('.unequal').show();
+       $('.equal').hide();
+       $('.unbidded').hide();
+
+    
+
+    } else {
+      $toggle.css('background', 'black');
+      $thumb.css('transform', 'translateX(0)');
+       $('.unequal').show();
+       $('.equal').show();
+       $('.unbidded').show();
+
+    
+    }
+  });
+
+
+  function check_filter(type,action){
+    if(type == 'unequal' && action == 'check'){
+
+    }
+  }
+
+  
    
 });
