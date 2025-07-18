@@ -39,16 +39,16 @@ function toHalfWidth(str) {
       </div>
       `;
 
-      let users_bid_div = "<div class='append_bids bid-header' style=' width: 166px;margin: 0 auto;float: inline-start;margin-left:-6px'></div>" 
+      let users_bid_div = "<div class='append_bids bid-header' style=' width: 166px;margin: 0 auto'></div>" 
    
-      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style=' width: 166px;margin-top:5px;margin-left:-6px'></div>";
+      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style=' width:166px;margin-top:5px;margin-left:-6px'></div>";
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecarlistraku.action')  || currentUrl.startsWith('https://www.uss-engine.com/tradecarlistspn.action')) {
       
         $(table).insertBefore('#container');
         $('.pc_list table tbody').each(function() { 
       
           if ($(this).attr('id')) {
-            $(this).find('.seri_kekka').prepend(users_bid_div);
+            $(this).find('.seri_kekka').css('text-align','center').append(users_bid_div);
            
           }
         });
@@ -56,6 +56,7 @@ function toHalfWidth(str) {
       }
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecardetail.action')) {
         $(table).insertBefore('#contents');
+        $('.thumb').css('top','-18px ')
         $('.contents_inner_area .index_inner_area02 .box01').append(user_bid_detail_page)
       
       }
@@ -158,7 +159,12 @@ function toHalfWidth(str) {
               if ($(this).attr('id')) {
                 let id =  $(this).attr('id'); 
                 let number = id.replace(/\D/g, '');
-                $('#tbody'+number).css('background-color','red');
+                // $('#tbody'+number).css('background-color','red');
+                // $('#tbody'+number).find('tr').eq(0).css('background-color','red');
+                 var $tds = $('#tbody' + number).find('tr').first().css('background-color', 'red').find('td');
+                      $tds.eq(0).css('color', 'white');
+                      $tds.eq(1).css({ color: 'black', 'font-weight': '600' });
+                      $tds.eq(2).css('color', 'white');
               }
            });
           alert('No record found!')
@@ -203,7 +209,8 @@ function toHalfWidth(str) {
               // Convert to integer if it has no decimals, otherwise keep it as float
               // bidValue = (bidValue % 1 === 0) ? parseInt(bidValue, 10) : bidValue;
               if(matchedItems.length == 0  ){
-                $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                // $('#tbody'+number).css('background-color','red');
+                $('#tbody'+number).find('tr').eq(0).css('background-color','red');
                 $('#tbody'+number).addClass('unbidded');
               }
               matchedItems.map(function(record){
@@ -237,7 +244,12 @@ function toHalfWidth(str) {
                     
                    }
                    if(rate_color == 'red'){
-                      $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                      // $('#tbody'+number).css('background-color','red');
+                      // $('#tbody'+number).find('tr').eq(0).css('background-color','red');
+                       var $tds = $('#tbody' + number).find('tr').first().css('background-color', 'red').find('td');
+                      $tds.eq(0).css('color', 'white');
+                      $tds.eq(1).css({ color: 'black', 'font-weight': '600' });
+                      $tds.eq(2).css('color', 'white');
                       $('#tbody'+number).addClass('unequal');
                     }else{
                      $('#tbody'+number).addClass('equal');
@@ -279,7 +291,11 @@ function toHalfWidth(str) {
 
                if(rate_color == 'red'){
                       // $('#tbody'+number).find('.append_bids').append(user_bid)
-                      $('#tbody'+number).css('background-color','rgb(235 147 147)');
+                      var $tds = $('#tbody' + number).find('tr').first().css('background-color', 'red').find('td');
+                      $tds.eq(0).css('color', 'white');
+                      $tds.eq(1).css({ color: 'black', 'font-weight': '600' });
+                      $tds.eq(2).css('color', 'white');
+                      
                       $('#tbody'+number).addClass('unequal');
                     }else{
                      $('#tbody'+number).addClass('equal');
@@ -315,18 +331,19 @@ function getUserdataLikeIuacExt(whole_bid,show_bid_name, hr_name, f_bid_price, u
                   <div title="${sh_cntry}" style="white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; font-size: 12px;color:black">${sh_cntry}</div>
                   </span>
                   ${total_bid}
-                  <span style="font-size: 13px; margin: 0 2px;color:black;width:35%" title="${user_id}">${user_name}</span>
+                  <span style="font-size: 13px; margin: 0 2px;color:black;width:35%;overflow: hidden; text-overflow: ellipsis" title="${user_id}">${user_name}</span>
           </div>
           
           <!-- Second Row -->
           <div style="display: flex; gap: 3px; justify-content: center;">
            <input title="${show_bid_name}" 
+                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; color: ${rate_color}; box-sizing: border-box;"
+                  class="already_bid_value njm_pre_price show_space_tb" disabled type="text" value="${f_bid_price}" placeholder="Bid...." />
+           <input title="${show_bid_name}" 
                   style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; box-sizing: border-box;"
                   class="already_bid_value njm_pre_ramarks" type="text" disabled value="${remark}" placeholder="Remarks...." />
 
-              <input title="${show_bid_name}" 
-                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; color: ${rate_color}; box-sizing: border-box;"
-                  class="already_bid_value njm_pre_price show_space_tb" disabled type="text" value="${f_bid_price}" placeholder="Bid...." />
+             
 
              
           </div>
