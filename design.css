@@ -133,7 +133,7 @@ box-shadow: inset 0px 0px 0px 2px rgba(255,255,255,1);
     display: inline-block;
     background-image:  url('chrome-extension://__MSG_@@extension_id__/sprites.png');
     background-repeat: no-repeat;
-    margin-top: 6px;
+    
 }
 .bid-header .flag.pyccknn {
 	background-position: -23px -113px

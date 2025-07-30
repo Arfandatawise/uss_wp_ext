@@ -39,9 +39,9 @@ function toHalfWidth(str) {
       </div>
       `;
 
-      let users_bid_div = "<div class='append_bids bid-header' style=' width: 166px;margin: 0 auto'></div>" 
+      let users_bid_div = "<div class='append_bids bid-header' style='margin: 0 auto'></div>" 
    
-      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style=' width:166px;margin-top:5px;margin-left:-6px'></div>";
+      let user_bid_detail_page = "<div id='append_bids' class='bid-header' style='width:240px;margin-top:5px;margin-left:-6px'></div>";
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecarlistraku.action')  || currentUrl.startsWith('https://www.uss-engine.com/tradecarlistspn.action')) {
       
         $(table).insertBefore('#container');
@@ -320,27 +320,27 @@ function getUserdataLikeIuacExt(whole_bid,show_bid_name, hr_name, f_bid_price, u
 
   let user_name = getFirstName(user_id);
   // let expense_deducted = `<span style="color: black; font-size: 14px; margin: 0 2px;color:black;font-size: 12px">Trp: ${expense}</span>`;
-  let total_bid = `<span style=" margin: 0 2px;color:black;font-size: 12px;font-weight:bold;width:25%;display:inline-block;text-align:center">(${whole_bid})</span>`;
+  let total_bid = `<span style=" margin: 0 2px;color:black;font-size: 15px;width:25%;display:inline-block;text-align:center">(${whole_bid})</span>`;
 
   let add_bid =
       `<div style="background-color: #ffc107; padding: 3px; font-family: Arial; width: 100%; box-sizing: border-box;">
           <!-- First Row -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 0px 8px;">
               <span style="display: flex; align-items: center;width:40%">
                   <span title="${show_bid_name}" class="flag ${hr_name}" style="margin-right: 2px;"></span>
-                  <div title="${sh_cntry}" style="white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; font-size: 12px;color:black">${sh_cntry}</div>
+                  <div title="${sh_cntry}" style="white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; font-size: 15px;color:black">${sh_cntry}</div>
                   </span>
                   ${total_bid}
-                  <span style="font-size: 13px; margin: 0 2px;color:black;width:35%;overflow: hidden; text-overflow: ellipsis" title="${user_id}">${user_name}</span>
+                  <span style="text-align:left;font-size: 15px; margin: 0 2px;color:black;width:35%;overflow: hidden; text-overflow: ellipsis" title="${user_id}">👤${user_name}</span>
           </div>
           
           <!-- Second Row -->
-          <div style="display: flex; gap: 3px; justify-content: center;">
+          <div style="display: flex; gap: 0.2px;margin:0px 8px;">
            <input title="${show_bid_name}" 
-                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; color: ${rate_color}; box-sizing: border-box;"
+                  style="width: 110px; font-weight: bold; padding: 5px; height: 26px; text-align: center;  border: 1px solid black; background-color: white; color: ${rate_color}; box-sizing: border-box;"
                   class="already_bid_value njm_pre_price show_space_tb" disabled type="text" value="${f_bid_price}" placeholder="Bid...." />
            <input title="${show_bid_name}" 
-                  style="width: 80px; font-weight: bold; padding: 5px; height: 20px; text-align: center; border-radius: 3px; border: none; background-color: white; box-sizing: border-box;"
+                  style="width: 110px; font-weight: bold; padding: 5px; height: 26px; text-align: center;  border: 1px solid black; background-color: white; box-sizing: border-box;"
                   class="already_bid_value njm_pre_ramarks" type="text" disabled value="${remark}" placeholder="Remarks...." />
 
              
@@ -365,8 +365,19 @@ function getBidColor(successfulBid, bidPrice) {
   return market_20 < success_bid ? "red" : "black"; // Check condition
 }
 
+// function getFirstName(name) {
+//   return name.split("_")[0]; // Split by '_' and return the first element
+// }
 function getFirstName(name) {
-  return name.split("_")[0]; // Split by '_' and return the first element
+  const parts = name.split("_");
+
+  if (parts.length === 2) {
+    return parts[0]; // Only return the first part
+  } else if (parts.length > 2) {
+    return parts.slice(0, -1).join("_"); // Join all except the last
+  } else {
+    return name; // Return as-is if no underscore
+  }
 }
 
 
