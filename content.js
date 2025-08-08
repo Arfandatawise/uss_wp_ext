@@ -19,32 +19,17 @@ function toHalfWidth(str) {
     let currentUrl = window.location.href;
    
     var table =
-      `<div style="right:15px;top:10px; width:130px;position:fixed;font-family: Gotham, Helvetica Neue, Helvetica, Arial, sans-serif !important;border-radius: 10px;padding:15px;background-color:#ffc107;z-index:10000" id="modal_selection_div_id">
-      <button id="load_bid_uss" style="padding:3px 12px;width:100%">Show Bid</button>
-      <label style=" font-size: 14px;color:black;font-weight:600">
-      No Bid
-      <div id="toggleNotBids" style="position: relative; width: 40px; height: 20px; background: black; border-radius: 20px; margin-top: 4px; cursor: pointer;">
-        <input type="checkbox" style="opacity: 0; width: 40px; height: 20px; position: absolute; top: 0; left: 0; margin: 0; cursor: pointer;">
-        <div class="thumb" style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s;"></div>
-      </div>
-    </label>
-
-     <label style=" font-size: 14px;color:black;font-weight:600">
-      Unmatched Bid
-      <div id="toggleNotEqual" style="position: relative; width: 40px; height: 20px; background: black; border-radius: 20px; margin-top: 4px; cursor: pointer;">
-        <input type="checkbox" style="opacity: 0; width: 40px; height: 20px; position: absolute; top: 0; left: 0; margin: 0; cursor: pointer;">
-        <div class="thumb" style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s;"></div>
-      </div>
-    </label>
-      </div>
-      `;
-
+    `<div class="show_bid_btn">											
+      <button id="load_bid_uss" style="padding:3px 12px;background-color:#ffc107">Show Bid</button>
+    </div>`;
+  
+   
       let users_bid_div = "<div class='append_bids bid-header' style='margin: 0 auto'></div>" 
    
       let user_bid_detail_page = "<div id='append_bids' class='bid-header' style='width:240px;margin-top:5px;margin-left:-6px'></div>";
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecarlistraku.action')  || currentUrl.startsWith('https://www.uss-engine.com/tradecarlistspn.action')) {
       
-        $(table).insertBefore('#container');
+        $('.clearfix.border').append(table);
         $('.pc_list table tbody').each(function() { 
       
           if ($(this).attr('id')) {
@@ -55,8 +40,8 @@ function toHalfWidth(str) {
       
       }
       if (currentUrl.startsWith('https://www.uss-engine.com/tradecardetail.action')) {
-        $(table).insertBefore('#contents');
-        $('.thumb').css('top','-18px ')
+        $('.index_inner_area02 > div >h1').after(table);
+        // $('.thumb').css('top','-18px ')
         $('.contents_inner_area .index_inner_area02 .box01').append(user_bid_detail_page)
       
       }
@@ -182,7 +167,8 @@ function toHalfWidth(str) {
                let number = id.replace(/\D/g, ''); // Removes all non-digit characters
               let auction_date = $('#AuctionDate'+number).val();
               let lot_no = $('#BidNo'+number).val();
-
+               $('#tbody'+number).find('tr').eq(0).find('span').css('margin','0px');
+             
               let valueInsideParentheses = '';
               var fullText = $(this).find('td.shasyu').find('span.text').text().trim();
               var match = fullText.match(/[（(]([^）)]+)[）)]/); // Supports both full-width and half-width parentheses
