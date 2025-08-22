@@ -16,11 +16,24 @@ function toHalfWidth(str) {
 
 
 
-    let currentUrl = window.location.href;
+    var currentUrl = window.location.href;
+    $(document).ready(function () {
+    
+      if (currentUrl.startsWith("https://www.uss-engine.com/tradecarlistraku.action")) {
+          setTimeout(function () {
+              location.reload();
+          }, 20000); // 20 sec = 20000 ms
+      }
+    });
+
+
+    
+
+
    
     var table =
     `<div class="show_bid_btn">											
-      <button id="load_bid_uss" style="padding:3px 12px;background-color:#ffc107">Show Bid</button>
+      <button id="load_bid_uss" style="padding:3px 12px;background-color:#FFEA00">Show Bid</button>
     </div>`;
   
    
@@ -212,7 +225,7 @@ function toHalfWidth(str) {
                 let  f_bid_price = record.rate;
                 let  user_id = record.user.user_id;
                 let  user_name = record.user.l_name;
-                let sh_cntry = record.country.hr_name;
+                let sh_cntry = record.country.country_code;
                 let rate_color  =   (typeof record.rate === "number") ? getBidColor(bidValue,record.rate) : 'black';
 
              
@@ -267,7 +280,7 @@ function toHalfWidth(str) {
                 let show_bid_name = record.user.user_id + "(" + record.country.hr_name + ")";
                 let  f_bid_price = record.rate;
                 let  user_id = record.user.user_id;
-                let sh_cntry = record.country.hr_name;
+                let sh_cntry = record.country.country_code;
                 let rate_color  =   (typeof record.rate === "number") ? getBidColor(bidValue,record.rate) : 'black';
                 if( typeof record.rate != "string"){
                   user_bid += getUserData(record.wholeBid,show_bid_name,hr_name,f_bid_price,user_id,sh_cntry,record.expense,record.remark ?? '',rate_color,max_rate)
@@ -309,7 +322,7 @@ function getUserdataLikeIuacExt(whole_bid,show_bid_name, hr_name, f_bid_price, u
   let total_bid = `<span style=" margin: 0 2px;color:black;font-size: 15px;width:25%;display:inline-block;text-align:center">(${whole_bid})</span>`;
 
   let add_bid =
-      `<div style="background-color: #ffc107; padding: 3px; font-family: Arial; width: 100%; box-sizing: border-box;">
+      `<div style="background-color: #FFEA00; padding: 3px; font-family: Arial; width: 100%; box-sizing: border-box;">
           <!-- First Row -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin: 0px 8px;">
               <span style="display: flex; align-items: center;width:40%">
@@ -317,7 +330,7 @@ function getUserdataLikeIuacExt(whole_bid,show_bid_name, hr_name, f_bid_price, u
                   <div title="${sh_cntry}" style="white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; font-size: 15px;color:black">${sh_cntry}</div>
                   </span>
                   ${total_bid}
-                  <span style="text-align:left;font-size: 15px; margin: 0 2px;color:black;width:35%;overflow: hidden; text-overflow: ellipsis" title="${user_id}">👤${user_name}</span>
+                  <span style="text-align:left;font-size: 15px; margin: 0 2px;color:black;width:35%;overflow: hidden; text-overflow: ellipsis" title="${user_id}">${user_name}</span>
           </div>
           
           <!-- Second Row -->
